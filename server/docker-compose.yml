@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  api:
+    container_name: api_bank
+    build: .
+    ports:
+      - 3000:3000
+    environment:
+      - POSTGRES_USER=rapha
+      - POSTGRES_PWD=123
+      - POSTGRES_DB=ngbank
+      - SECRET_KEY=ngbanksecret
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+
+  db:
+    container_name: bank_db
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=rapha
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=ngbank
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
