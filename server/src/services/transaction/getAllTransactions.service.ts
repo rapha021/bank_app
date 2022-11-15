@@ -21,7 +21,7 @@ const getAllTransactionService = async (
       debitedAccountId: getLoggedUser!.account,
     },
     relations: {
-      creditedAccountId: true,
+      debitedAccountId: true,
     },
   })
 
@@ -30,25 +30,12 @@ const getAllTransactionService = async (
       creditedAccountId: getLoggedUser!.account,
     },
     relations: {
-      debitedAccountId: true,
+      creditedAccountId: true,
     },
   })
 
   const cashOutTransactions = getCashOutTransactions.map((transaction) => {
     const receiverUser = getAllUser.filter(
-      (user) => user.account.id === transaction.creditedAccountId.id
-    )
-
-    return {
-      id: transaction.id,
-      value: transaction.value,
-      createdAt: transaction.createdAt,
-      sentTo: { username: receiverUser[0].userName },
-    }
-  })
-
-  const cashInTransactions = getCashInTransactions.map((transaction) => {
-    const receivedFromUser = getAllUser.filter(
       (user) => user.account.id === transaction.debitedAccountId.id
     )
 
@@ -56,15 +43,30 @@ const getAllTransactionService = async (
       id: transaction.id,
       value: transaction.value,
       createdAt: transaction.createdAt,
-      receivedFrom: { username: receivedFromUser[0].userName },
+      account: { username: receiverUser[0].userName },
+      type: "cashOut",
+    }
+  })
+
+  const cashInTransactions = getCashInTransactions.map((transaction) => {
+    const receivedFromUser = getAllUser.filter(
+      (user) => user.account.id === transaction.creditedAccountId.id
+    )
+
+    return {
+      id: transaction.id,
+      value: transaction.value,
+      createdAt: transaction.createdAt,
+      account: { username: receivedFromUser[0].userName },
+      type: "cashIn",
     }
   })
 
   getCashOutTransactions.length > 0 &&
-    allTransactions.push({ transferred: cashOutTransactions })
+    allTransactions.push(...cashOutTransactions)
 
   getCashInTransactions.length > 0 &&
-    allTransactions.push({ received: cashInTransactions })
+    allTransactions.push(...cashInTransactions)
 
   if (cashout === "true" && cashin === "true") {
     if (allTransactions.length < 1) {

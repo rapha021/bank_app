@@ -5,8 +5,6 @@ const getAllTransactionController = async (req: Request, res: Response) => {
   const { cashout, cashin } = req.query
   const userId = req.user.id
 
-  console.log(req.query)
-
   const transactionsList = await getAllTransactionService(
     cashout,
     cashin,
