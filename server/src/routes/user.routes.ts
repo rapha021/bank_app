@@ -7,10 +7,10 @@ import ensureAuthMiddleware from "../middlewares/ensureAuth.middleware"
 const router = Router()
 
 export const userRoutes = () => {
-  router.get("/", sessionUserController)
   router.get("/balance", ensureAuthMiddleware, verifyBalanceController)
 
-  router.post("/", createUserController)
+  router.post("/login", sessionUserController)
+  router.post("/register", createUserController)
 
   return router
 }
