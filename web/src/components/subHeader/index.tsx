@@ -1,14 +1,24 @@
+import { Avatar, Typography } from "@mui/material"
+import { IBalanceResponse } from "../../contexts/login/login.interface"
+import { Container, Div } from "./styles"
+
 interface IubHeaderProps {
-  name: string
-  balance: number
+  userData: IBalanceResponse
 }
 
-const SubHeader = ({ name, balance }: IubHeaderProps) => {
+const SubHeader = ({ userData }: IubHeaderProps) => {
   return (
-    <div>
-      <h1>Olá, {name}</h1>
-      <h2>Seu saldo: R${balance.toFixed(2).replace(".", ",")}</h2>
-    </div>
+    <Container>
+      <Avatar alt={userData.userName} sx={{ backgroundColor: "#1976d2" }}>
+        {userData.userName[0]}
+      </Avatar>
+      <Div>
+        <Typography variant="h5">Olá, {userData.userName}</Typography>
+        <Typography variant="caption">
+          Seu saldo é: R${userData.account.balance.toFixed(2).replace(".", ",")}
+        </Typography>
+      </Div>
+    </Container>
   )
 }
 

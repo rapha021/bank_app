@@ -18,9 +18,9 @@ export class Transaction {
   @ManyToOne(() => Account, (account) => account.id)
   creditedAccountId: Account
 
-  @Column()
+  @Column({ type: "float8" })
   value: number
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: "timestamptz" })
   createdAt: Date
 }

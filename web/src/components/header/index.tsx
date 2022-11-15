@@ -1,8 +1,12 @@
 import { Button } from "@mui/material"
+import { useLogin } from "../../contexts/login/login.context"
 
 const Header = () => {
+  const { setAuth } = useLogin()
+
   const handleLogout = () => {
     localStorage.clear()
+    setAuth(false)
   }
 
   return (

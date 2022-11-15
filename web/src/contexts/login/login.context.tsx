@@ -1,54 +1,43 @@
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react"
-import { api } from "../services/api"
+import { createContext, useContext, useEffect, useState } from "react"
+import { api } from "../../services/api"
 import * as yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useForm } from "react-hook-form"
 import { toast } from "react-toastify"
-
-interface ILogin {
-  loading: boolean
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>
-  auth: boolean
-  setAuth: React.Dispatch<React.SetStateAction<boolean>>
-  register: UseFormRegister<ILoginRequest>
-  handleSubmit: UseFormHandleSubmit<ILoginRequest>
-  errors: FieldErrorsImpl<DeepRequired<ILoginRequest>>
-  onSubmit: (data: ILoginRequest) => Promise<void>
-}
-
-interface ILoginRequest {
-  username: string
-  password: string
-}
-
-interface ILoginProps {
-  children: ReactNode
-}
+import {
+  IBalanceResponse,
+  ILogin,
+  ILoginProps,
+  ILoginRequest,
+} from "./login.interface"
+import { useNavigate } from "react-router-dom"
 
 export const LoginContext = createContext<ILogin>({} as ILogin)
 
 const LoginProvider = ({ children }: ILoginProps) => {
   const [loading, setLoading] = useState(true)
   const [auth, setAuth] = useState(false)
+  const [userData, setUserData] = useState<IBalanceResponse>(
+    {} as IBalanceResponse
+  )
+
+  const navigate = useNavigate()
 
   useEffect(() => {
-    api
-      .get("/user/balance")
-      .then((res) => {
-        window.localStorage.setItem("@bank:balance", res.data.balance)
-        setAuth(true)
-        setLoading(false)
-      })
-      .catch((err) => {
-        setAuth(false)
-        setLoading(false)
-      })
+    const verifySession = async () => {
+      await api
+        .get<IBalanceResponse>("/user/balance")
+        .then((res) => {
+          setUserData(res.data)
+          setAuth(true)
+          setLoading(false)
+        })
+        .catch((err) => {
+          setAuth(false)
+          setLoading(false)
+        })
+    }
+    verifySession()
   }, [])
 
   const formSchema = yup.object().shape({
@@ -70,13 +59,12 @@ const LoginProvider = ({ children }: ILoginProps) => {
         password: data.password,
       })
       .then((res) => {
-        window.localStorage.setItem("@bank:username", data.username)
         window.localStorage.setItem("@bank:token", res.data.token)
         toast.success("Login feito com sucesso!", {
           autoClose: 1500,
           toastId: "loginSuccess",
         })
-        setAuth(true)
+        window.location.reload()
       })
       .catch((err) => {
         toast.error("username ou senha incorretos", {
@@ -98,6 +86,8 @@ const LoginProvider = ({ children }: ILoginProps) => {
         handleSubmit,
         errors,
         onSubmit,
+        userData,
+        setUserData,
       }}
     >
       {children}

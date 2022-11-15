@@ -6,7 +6,7 @@ export class Account {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string
 
-  @Column({ default: 100 })
+  @Column({ default: 100, type: "float8" })
   balance: number
 
   @OneToMany(() => Transaction, (transaction) => transaction.debitedAccountId)

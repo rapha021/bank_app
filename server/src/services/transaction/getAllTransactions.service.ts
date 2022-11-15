@@ -22,6 +22,7 @@ const getAllTransactionService = async (
     },
     relations: {
       debitedAccountId: true,
+      creditedAccountId: true,
     },
   })
 
@@ -31,12 +32,13 @@ const getAllTransactionService = async (
     },
     relations: {
       creditedAccountId: true,
+      debitedAccountId: true,
     },
   })
 
   const cashOutTransactions = getCashOutTransactions.map((transaction) => {
     const receiverUser = getAllUser.filter(
-      (user) => user.account.id === transaction.debitedAccountId.id
+      (user) => user.account.id === transaction.creditedAccountId.id
     )
 
     return {
@@ -50,7 +52,7 @@ const getAllTransactionService = async (
 
   const cashInTransactions = getCashInTransactions.map((transaction) => {
     const receivedFromUser = getAllUser.filter(
-      (user) => user.account.id === transaction.creditedAccountId.id
+      (user) => user.account.id === transaction.debitedAccountId.id
     )
 
     return {

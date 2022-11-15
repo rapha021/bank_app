@@ -1,31 +1,51 @@
-import { Grid } from "@mui/material"
+import { Button, Grid } from "@mui/material"
+import { useState } from "react"
 import { Navigate } from "react-router-dom"
 import Header from "../../components/header"
+import Modal from "../../components/modal"
 import SubHeader from "../../components/subHeader"
-import Table from "../../components/table"
-import { useLogin } from "../../contexts/login.context"
-import { useRequests } from "../../contexts/requests.context"
+import TableComponent from "../../components/table"
+import { useLogin } from "../../contexts/login/login.context"
+import { useRequests } from "../../contexts/requests/requests.context"
+import { Container } from "./styles"
 
 const Dashboard = () => {
-  const { transactions } = useRequests()
-  const { auth } = useLogin()
-
-  const username = window.localStorage.getItem("@bank:username")
-  const balance = window.localStorage.getItem("@bank:balance")
+  const { transactions, modal, setModal } = useRequests()
+  const { auth, userData, loading } = useLogin()
 
   return (
     <>
       {!auth && <Navigate to="/login" />}
+      {modal && <Modal setModal={setModal} />}
       <Header />
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <SubHeader name={username} balance={balance} />
-        </Grid>
+      <Container>
+        <Grid
+          container
+          spacing={2}
+          sx={{
+            ".MuiGrid-item": {
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            },
+            maxWidth: 800,
+          }}
+        >
+          <Grid item xs={12} md={6}>
+            {userData.id && <SubHeader userData={userData} />}
+          </Grid>
 
-        <Grid item xs={12}>
-          <Table data={transactions!} />
+          <Grid item xs={12} md={6}>
+            <Button variant="contained" onClick={() => setModal(true)}>
+              Fazer uma transferencia
+            </Button>
+          </Grid>
+
+          <Grid item xs={12}>
+            <TableComponent data={transactions} />
+          </Grid>
         </Grid>
-      </Grid>
+      </Container>
     </>
   )
 }
