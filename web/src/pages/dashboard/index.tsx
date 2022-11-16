@@ -37,7 +37,7 @@ const Dashboard = () => {
 
           <Grid item xs={12} md={6}>
             <Button variant="contained" onClick={() => setModal(true)}>
-              Fazer uma transferencia
+              Fazer uma transferência
             </Button>
           </Grid>
 

@@ -18,7 +18,7 @@ const Modal = ({ setModal }: IModalProps) => {
 
   return (
     <Dialog open={true}>
-      <DialogTitle>Menu de transferencias</DialogTitle>
+      <DialogTitle>Menu de transferências</DialogTitle>
 
       <DialogContent
         sx={{
@@ -28,7 +28,7 @@ const Modal = ({ setModal }: IModalProps) => {
           gap: "10px",
         }}
       >
-        <DialogContentText>Fazer transferencia</DialogContentText>
+        <DialogContentText>Fazer transferência</DialogContentText>
 
         <TextField
           label="Username"

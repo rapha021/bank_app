@@ -12,6 +12,10 @@ const createUserService = async ({
   const usersRepository = AppDataSource.getRepository(User)
   const accountsRepository = AppDataSource.getRepository(Account)
 
+  if (username.length <= 3) {
+    throw new AppError(411, "Username mus be at least 3 characters")
+  }
+
   const findUser = await usersRepository.findOneBy({ userName: username })
 
   if (findUser) {
@@ -21,15 +25,6 @@ const createUserService = async ({
   if (password.length < 8) {
     throw new AppError(411, "Password must be at least 8 characters")
   }
-
-  // const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/
-
-  // if (!password.match(regex)) {
-  //   throw new AppError(
-  //     411,
-  //     "Password must be at least 8 characters, one number and one upper case letter"
-  //   )
-  // }
 
   const hashedPassword = hashSync(password, 10)
 

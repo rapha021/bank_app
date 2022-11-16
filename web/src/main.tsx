@@ -7,16 +7,19 @@ import LoginProvider from "./contexts/login/login.context"
 import "react-toastify/dist/ReactToastify.css"
 import RequestsProvider from "./contexts/requests/requests.context"
 import { GlobalStyle } from "./globalStyle"
+import RegisterProvider from "./contexts/register/register.context"
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <BrowserRouter>
       <LoginProvider>
-        <RequestsProvider>
-          <ToastContainer />
-          <GlobalStyle />
-          <App />
-        </RequestsProvider>
+        <RegisterProvider>
+          <RequestsProvider>
+            <ToastContainer />
+            <GlobalStyle />
+            <App />
+          </RequestsProvider>
+        </RegisterProvider>
       </LoginProvider>
     </BrowserRouter>
   </React.StrictMode>

@@ -38,7 +38,7 @@ const LoginProvider = ({ children }: ILoginProps) => {
         })
     }
     verifySession()
-  }, [])
+  }, [loading])
 
   const formSchema = yup.object().shape({
     username: yup.string().required("Insira seu username"),

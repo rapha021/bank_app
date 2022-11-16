@@ -24,7 +24,11 @@ const cashOutService = async (
     id: userCashIn?.account.id,
   })
 
-  if (accountCashOut?.id === accountCashIn?.id) {
+  if (!userCashIn) {
+    throw new AppError(404, "username not found")
+  }
+
+  if (userCashOut!.id === userCashIn!.id) {
     throw new AppError(401, "You cant send money to yourself")
   }
 

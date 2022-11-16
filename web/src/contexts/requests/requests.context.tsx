@@ -47,14 +47,24 @@ const RequestsProvider = ({ children }: IRequestsProps) => {
       })
       .then((res) => {
         setModal(false)
-        toast.success("Transferencia feita com sucesso!", {
+        toast.success("Transferência feita com sucesso!", {
           autoClose: 1500,
         })
       })
       .catch((err) => {
-        toast.error("Username inválido", {
-          autoClose: 1500,
-        })
+        if (err.response.data.message === "You cant send money to yourself") {
+          toast.error("Você não pode mandar dinheiro para si mesmo", {
+            autoClose: 1500,
+          })
+        } else if (err.response.data.message === "Insuficient balance") {
+          toast.error("Saldo insuficiente", {
+            autoClose: 1500,
+          })
+        } else {
+          toast.error("Username inválido", {
+            autoClose: 1500,
+          })
+        }
       })
     setLoading(false)
   }
